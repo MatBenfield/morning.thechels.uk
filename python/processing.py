@@ -50,7 +50,7 @@ def get_published_info(entry):
     elif(entry["pubDate"].split("T")[0] is not None):
         return entry["pubDate"].split("T")[0]
     elif(entry["PubDate"].split("T")[0] is not None):
-        return = entry["PubDate"].split("T")[0]
+        return entry["PubDate"].split("T")[0]
     else:
         print(entry["link"].split("#")[0] " is broken")
 
