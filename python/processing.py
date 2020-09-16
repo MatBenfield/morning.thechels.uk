@@ -45,9 +45,9 @@ def get_hostname(url):
 
 # publish date
 def get_published_info(entry):
-    if(entry["published"] is not none):
+    if(entry["published"] is not None):
         return entry["published"].split("T")[0]
-    elif(entry["pubDate"] is not none):
+    elif(entry["pubDate"] is not None):
         return entry["pubDate"].split("T")[0]
     else:
         return "unknown"
