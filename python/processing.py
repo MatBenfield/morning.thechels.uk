@@ -13,27 +13,8 @@ from urllib.parse import urlparse
 
 # setup
 root = pathlib.Path(__file__).parent.parent.resolve()
-url_list = [
-      "http://daringfireball.net/index.xml",
-      "http://feeds.feedburner.com/macstoriesnet",
-      "https://www.cloudflarestatus.com/history.rss",
-      "http://blog.agilebits.com/feed/",
-      "https://status.dropbox.com/history.rss",
-      "http://feeds.feedburner.com/Garmin",
-      "http://status.ifttt.com/history.rss",
-      "http://blog.mailgun.net/rss",
-      "http://blog.strava.com/feed/atom/",
-      "http://blog.supertop.co/rss",
-      "https://blog.dropbox.com/feed/",
-      "https://medium.com/feed/strava-engineering",
-      "http://www.politics.co.uk/rss.xml",
-      "https://sixcolors.com/feed.json",
-      "http://feeds.feedburner.com/ReflectivePerspective",
-      "http://the5krunner.com/feed/",
-      "https://www.troyhunt.com/rss/",
-     # "http://usesthis.com/feed/",
-     # "https://wonkhe.com/blogs/feed/"
-]
+with open( root / "websites.json", 'r') as filehandle:
+ url_list = json.load(filehandle)
 
 # Replacer function
 def replace_chunk(content, marker, chunk):
@@ -52,7 +33,7 @@ def fetch_blog_entries(working_url):
             "domain": get_hostname(entry["link"].split("#")[0]),
             "title": entry["title"],
             "url": entry["link"].split("#")[0],
-            "published": entry["published"].split("T")[0],
+            "published": get_published_info(entry["published"].split("T")[0]),
         }
         for entry in entries
     ]
@@ -62,6 +43,11 @@ def get_hostname(url):
     domain = urlparse(url).hostname
     return domain
 
+# publish date
+def get_published_info(value):
+    if(value == null):
+        return(entry["PubDate"].split("T")[0])
+    return(entry["published"].split("T")[0])
 
 # processing
 if __name__ == "__main__":
