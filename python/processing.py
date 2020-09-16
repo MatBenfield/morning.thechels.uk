@@ -45,10 +45,10 @@ def get_hostname(url):
 
 # publish date
 def get_published_info(entry):
-    try: entry["published"]:
+    try: entry["published"]
         return entry["published"].split("T")[0]
     except: KeyError
-        try: entry["pubDate"]:
+        try: entry["pubDate"]
             return entry["pubDate"].split("T")[0]
         else:
             return "unknown"
