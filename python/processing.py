@@ -33,7 +33,7 @@ def fetch_blog_entries(working_url):
             "domain": get_hostname(entry["link"].split("#")[0]),
             "title": entry["title"],
             "url": entry["link"].split("#")[0],
-            "published": get_published_info(entries),
+            "published": get_published_info(entry),
         }
         for entry in entries
     ]
@@ -45,9 +45,9 @@ def get_hostname(url):
 
 # publish date
 def get_published_info(entry):
-    if(entry["published"] is not None):
+    if(entry["published"].split("T")[0] is not None):
         pub_date = entry["published"].split("T")[0]
-    elif(entry["PubDate"] is not None):
+    elif(entry["PubDate"].split("T")[0] is not None):
         pub_date = entry["PubDate"].split("T")[0]
     return pub_date
 
