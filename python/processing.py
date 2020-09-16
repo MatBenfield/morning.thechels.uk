@@ -45,7 +45,7 @@ def get_hostname(url):
 
 # publish date
 def get_published_info(value):
-    if(value == null):
+    if(value is None):
         return(entry["PubDate"].split("T")[0])
     return(entry["published"].split("T")[0])
 
