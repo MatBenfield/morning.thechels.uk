@@ -43,16 +43,25 @@ def get_hostname(url):
     domain = urlparse(url).hostname
     return domain
 
+def __getattribute__(self, item):
+    if hasattr(self, item):
+        return object.__getattribute__(item)
+    else:
+        try:
+            return self.dict[item]
+        except KeyError:
+            raise AttributeError("some customised error")
+
+
 # publish date
 def get_published_info(entry):
-    try: entry["published"]
-        return entry["published"].split("T")[0]
-    except: KeyError
-        try: entry["pubDate"]
-            return entry["pubDate"].split("T")[0]
-        else:
-            return "unknown"
-
+    if(__getattribute__(entry,entry["published"])):
+        pub_date = entry["published"].split("T")[0]
+    elif(__getattribute__(entry,entry["pubDate"])):
+        pub_date = entry["pubDate"].split("T")[0]
+    else:
+        pub_date = "unknown"
+    return pub_date
 
 # processing
 if __name__ == "__main__":
