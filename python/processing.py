@@ -45,14 +45,13 @@ def get_hostname(url):
 
 # publish date
 def get_published_info(entry):
-    if(entry["published"].split("T")[0] is not None):
+    if(entry["published"] is not none):
         return entry["published"].split("T")[0]
-    elif(entry["pubDate"].split("T")[0] is not None):
+    elif(entry["pubDate"] is not none):
         return entry["pubDate"].split("T")[0]
-    elif(entry["PubDate"].split("T")[0] is not None):
-        return entry["PubDate"].split("T")[0]
     else:
-        print(entry["link"].split("#")[0] +" is broken")
+        return "unknown"
+
 
 # processing
 if __name__ == "__main__":
