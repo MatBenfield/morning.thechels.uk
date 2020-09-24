@@ -19,11 +19,11 @@ my_loc = response_dict['list'][0]
 today_weather = str(my_loc['main']['temp'])
 high_temp = str(my_loc['main']['temp_max'])
 low_temp = str(my_loc['main']['temp_min'])
-rain = str(my_loc['rain'])
-today_desc = str(my_loc['weather'][0]['description'])
-
-if(rain == "None"):
+try:
+    rain = str(my_loc['rain']['1h'])
+except TypeError:
     rain = "0"
+today_desc = str(my_loc['weather'][0]['description'])
 
 string_today =  f"Today's date is {output_date}, Here is your daily briefing..."
 string_today += f"The average temperature today is {today_weather}˚C with highs of {high_temp}˚C and lows of {low_temp}˚C. "
