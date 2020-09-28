@@ -27,7 +27,7 @@ if(rain == "None"):
 
 string_today =  f"Today's date is {output_date}, Here is your daily briefing..."
 string_today += f"The average temperature today is {today_weather}˚C with highs of {high_temp}˚C and lows of {low_temp}˚C. "
-string_today += f"You should expect {today_desc} with a {rain}% chance of rain."
+string_today += f"You can expect {today_desc} for the day."
 
 # Replacer function
 def replace_chunk(content, marker, chunk):
