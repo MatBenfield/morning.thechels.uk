@@ -31,6 +31,8 @@ jobs:
           open_weather_key: ${{ secrets.OPEN_WEATHER_KEY }}
           city_code: ${{ secrets.CITY_CODE }}
           country_code: ${{ secrets.COUNTRY_CODE }}
+          lat: ${{ secrets.LAT_COORDS }}
+          lon: ${{ secrets.LON_COORDS }}
       run: |-
         python 'python/news.py'
         python 'python/weather.py'
