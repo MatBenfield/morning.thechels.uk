@@ -29,7 +29,7 @@ def get_covid_data(num_days):
     string_builder = ""
     data = response.json()['data'][:num_days]
     for i in range(0, num_days):
-        string_builder += (f"\n<li>{0 if data[i]['newCases'] == None else data[i]['newCases']} new cases & "
+        string_builder += (f"<li>{0 if data[i]['newCases'] == None else data[i]['newCases']} new cases & "
         f"{0 if data[i]['deaths'] == None else data[i]['deaths']} deaths ")
         if i == 0:
             string_builder += "today"
@@ -37,7 +37,7 @@ def get_covid_data(num_days):
             string_builder += "yesterday"
         else:
             string_builder += f"on {data[i]['date']}"
-        string_builder += "</li>"
+        string_builder += "</li>\n"
     return string_builder
 
 
@@ -47,5 +47,5 @@ if __name__ == "__main__":
     index_contents = index_page.open().read()
     string_output = get_covid_data(5)
 
-    final_output = replace_chunk(index_contents, "covid_marker", f"<ul>{string_output}\n</ul>")
+    final_output = replace_chunk(index_contents, "covid_marker", f"<ul>\n{string_output}</ul>")
     index_page.open("w").write(final_output)

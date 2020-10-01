@@ -66,5 +66,5 @@ if __name__ == "__main__":
     entries_data = sorted(get_entries(url_list), key=attrgetter('published'), reverse=True)
     for output_articles in entries_data[:15]:
         all_news += f'<li>{output_articles.title}<br/><small><a href="{output_articles.url}" target="new">{output_articles.domain}</a> | Published {output_articles.published}</small></li>\n'
-    final_output = replace_chunk(index_contents, "content_marker", "<ul>\n" + all_news + "</ul>\n")
+    final_output = replace_chunk(index_contents, "content_marker", f"<ul>\n{all_news}</ul>")
     index_page.open("w").write(final_output)
