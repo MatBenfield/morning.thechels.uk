@@ -21,7 +21,7 @@ def replace_chunk(content, marker, chunk):
 def get_stocks(set_of_tickers):
     string_builder = ""
     for ticker in list(set_of_tickers):
-        string_builder += f"<li>{ticker} : {round(si.get_live_price(ticker),5)}</li>"
+        string_builder += f"\n<li>{ticker} : {round(si.get_live_price(ticker),5)}</li>"
     return string_builder
 
 # output
