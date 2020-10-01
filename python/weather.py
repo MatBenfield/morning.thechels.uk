@@ -7,27 +7,23 @@ from datetime import date
 
 # setup
 root = pathlib.Path(__file__).parent.parent.resolve()
-location = os.getenv('city_code')+','+os.getenv('country_code')
+lat=os.getenv('lat')
+lon=os.getenv('lon')
 APIKEY = os.getenv('open_weather_key')
-url = "http://api.openweathermap.org/data/2.5/find?q=%s&units=metric&APPID=%s" %(location,APIKEY)
+url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&exclude=current,minutely,hourly,alerts&units=metric" %(lat,lon,APIKEY)
 # headers = {"Authorization":"Bearer %s"%key}
 
 response = requests.get(url)
 response_dict = json.loads(response.text)
 output_date = date.today()
-my_loc = response_dict['list'][0]
-today_weather = str(my_loc['main']['temp'])
-high_temp = str(my_loc['main']['temp_max'])
-low_temp = str(my_loc['main']['temp_min'])
-rain = str(my_loc['rain'])
-today_desc = str(my_loc['weather'][0]['description'])
-
-if(rain == "None"):
-    rain = "0"
+today_weather = str(response_dict['daily'][0]['temp']['day'])
+high_temp = str(response_dict['daily'][0]['temp']['max'])
+low_temp = str(response_dict['daily'][0]['temp']['min'])
+today_desc = str(response_dict['daily'][0]['weather'][0]['description'])
 
 string_today =  f"Today's date is {output_date}, Here is your daily briefing..."
 string_today += f"The average temperature today is {today_weather}˚C with highs of {high_temp}˚C and lows of {low_temp}˚C. "
-string_today += f"You should expect {today_desc} with a {rain}% chance of rain."
+string_today += f"You can expect {today_desc} for the day."
 
 # Replacer function
 def replace_chunk(content, marker, chunk):
