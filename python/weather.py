@@ -11,7 +11,6 @@ lat=os.getenv('lat')
 lon=os.getenv('lon')
 APIKEY = os.getenv('open_weather_key')
 url = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&exclude=current,minutely,hourly,alerts&units=metric" %(lat,lon,APIKEY)
-# headers = {"Authorization":"Bearer %s"%key}
 
 response = requests.get(url)
 response_dict = json.loads(response.text)
