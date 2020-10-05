@@ -1,7 +1,7 @@
 on:
   issues:
     types: [labeled]
-name: write to file on Label
+name: Write to file on Label
 env:
   workingLabel: '${{github.event.label.name}}'
 
@@ -14,7 +14,15 @@ jobs:
     - name: check permission
       id: permission_check
       if: github.actor == github.event.repository.owner.login
-      run: echo permission pass
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: ':white_check_mark: Updating '+ workingLabel +' file.'
+          })
     - name: check permission failed
       if: github.actor != github.event.repository.owner.login
       run: exit 1
@@ -36,20 +44,3 @@ jobs:
             repo: context.repo.repo,
             name: '${{ github.event.label.name }}',
           })
-
-  deployment:
-    name: Deployment via label
-    runs-on: ubuntu-latest
-    if: endsWith(github.event.label.name, 'quote')
-    steps:
-      - name: Approval granted
-        uses: actions/github-script@0.5.0
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '👋 @' + context.actor + ', approval granted, creating new item...'
-            })
