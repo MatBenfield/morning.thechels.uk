@@ -37,6 +37,7 @@ jobs:
         python 'python/weather.py'
         python 'python/sports.py'
         python 'python/stocks.py'
+        python 'python/quotes.py'
         python 'python/coronavirus.py'
         cat index.html
     - name: Commit and push if Index page changed
