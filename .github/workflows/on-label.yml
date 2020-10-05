@@ -1,9 +1,7 @@
 on:
-  issue:
+  issues:
     types: [labeled]
-    
 name: write to file on Label
-
 env:
   workingLabel: '${{github.event.label.name}}'
 
@@ -21,7 +19,7 @@ jobs:
       if: github.actor != github.event.repository.owner.login
       run: exit 1
     - name: Comment Permission Check Fail
-      if: (failure()) && endsWith(github.event.label.name, 'DEV') 
+      if: (failure())
       uses: actions/github-script@0.5.0
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
@@ -30,19 +28,7 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: ':warning: Attempted Deployment triggered by @' + context.actor + ' who is NOT the repository owner. `${{ github.event.label.name }}` will continue.'
-          })
-    - name: Comment Permission Check Fail and Remove Label
-      if: (failure()) && endsWith(github.event.label.name, 'QA') || (failure()) && endsWith(github.event.label.name, 'PROD')
-      uses: actions/github-script@0.5.0
-      with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: ':x: Attempted Deployment triggered by @' + context.actor + ' who is NOT the repository owner. `${{ github.event.label.name }}` stopped.'
+            body: ':warning: Attempt to save to '+ workingLabel +' file triggered by @' + context.actor + ' who is NOT the repository owner.'
           })
           github.issues.removeLabel({
             issue_number: context.issue.number,
@@ -50,45 +36,11 @@ jobs:
             repo: context.repo.repo,
             name: '${{ github.event.label.name }}',
           })
-          
-    - name: Validate PROD Requirements
-      id: PROD_Check
-      if: endsWith(github.event.label.name, 'PROD') && contains(github.event.pull_request.labels.*.name, 'Azure-QA-Live')
-      run: echo PROD Deployment Valid
-    - name: Update PR for Failed PROD
-      if: steps.PROD_Check.outcome == 'skipped' && steps.permission_check.outcome == 'success' && endsWith(github.event.label.name, 'PROD')
-      uses: actions/github-script@0.5.0
-      with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: ':x: Attempted Deployment triggered by @' + context.actor + ' PROD requirements not met. `${{ github.event.label.name }}` stopped.'
-          })
-          github.issues.removeLabel({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            name: '${{ github.event.label.name }}',
-          })
-      
 
-  debug:
-    name: _debug
-    runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'debug')
-    steps:
-    - name: context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-      
   deployment:
-    name: Deployment via label to DEV
+    name: Deployment via label
     runs-on: ubuntu-latest
-    if: endsWith(github.event.label.name, 'DEV') 
+    if: endsWith(github.event.label.name, 'quote')
     steps:
       - name: Approval granted
         uses: actions/github-script@0.5.0
@@ -99,89 +51,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 @' + context.actor + ', approval granted, creating deployment request ...'
-            })
-      - name: Get Branch Name
-        uses: mdecoleman/pr-branch-name@1.0.0
-        id: vars
-        with:
-         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        # outputs to ${{ steps.vars.outputs.branch }}
-      - name: Kicking off deployment
-        uses: actions/github-script@0.5.0
-        with:
-          github-token: ${{secrets.GPR_PAT}}
-          script: |
-            let branchName = '${{ steps.vars.outputs.branch }}';
-            let deployEnvLabel = '${{github.event.label.name}}';
-            github.repos.createDeployment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: branchName,
-              task: 'deploy-to-azure',
-              auto_merge: false,
-              required_contexts: [],
-              environment: 'Azure-' + deployEnvLabel,
-              description: 'Production environment for Azure',
-              payload:  { issue: context.issue.number, ref: branchName, deployEnvLabel: deployEnvLabel },
-              production_environment: false,
-              transient_environment: false
-            })
-            
-            github.issues.addAssignees({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              assignees: context.actor
-            })
-
-  deployment-to-prod:
-    name: Deployment via label to QA or PROD
-    needs: permission
-    runs-on: ubuntu-latest
-    if: endsWith(github.event.label.name, 'PROD') && contains(github.event.pull_request.labels.*.name, 'Azure-QA-Live') || endsWith(github.event.label.name, 'QA') 
-    steps:
-      - name: Approval granted
-        uses: actions/github-script@0.5.0
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '👋 @' + context.actor + ', approval granted, creating deployment request ...'
-            })
-      - name: Get Branch Name
-        uses: mdecoleman/pr-branch-name@1.0.0
-        id: vars
-        with:
-         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        # outputs to ${{ steps.vars.outputs.branch }}
-      - name: Kicking off deployment
-        uses: actions/github-script@0.5.0
-        with:
-          github-token: ${{secrets.GPR_PAT}}
-          script: |
-            let branchName = '${{ steps.vars.outputs.branch }}';
-            let deployEnvLabel = '${{github.event.label.name}}';
-            github.repos.createDeployment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: branchName,
-              task: 'deploy-to-azure',
-              auto_merge: false,
-              required_contexts: [],
-              environment: 'Azure-' + deployEnvLabel,
-              description: 'Production environment for Azure',
-              payload:  { issue: context.issue.number, ref: branchName, deployEnvLabel: deployEnvLabel },
-              production_environment: false,
-              transient_environment: false
-            })
-            
-            github.issues.addAssignees({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              assignees: context.actor
+              body: '👋 @' + context.actor + ', approval granted, creating new item...'
             })
