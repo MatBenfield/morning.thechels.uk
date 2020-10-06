@@ -1,7 +1,6 @@
 
  # importing modules
 import os
-import re
 import random
 import pathlib
 import json
@@ -11,20 +10,13 @@ import datefinder
 from datetime import datetime
 from urllib.parse import urlparse
 from operator import itemgetter, attrgetter, methodcaller
+import helper
 
 # setup
 root = pathlib.Path(__file__).parent.parent.resolve()
 with open( root / "config/websites.json", 'r') as filehandle:
   url_list = json.load(filehandle)
 
-# Replacer function
-def replace_chunk(content, marker, chunk):
-    replacer = re.compile(
-        r"<!\-\- {} starts \-\->.*<!\-\- {} ends \-\->".format(marker, marker),
-        re.DOTALL,
-    )
-    chunk = "<!-- {} starts -->\n{}\n<!-- {} ends -->".format(marker, chunk, marker)
-    return replacer.sub(chunk, content)
 
 class article:
         def __init__(self, published, title, url):
@@ -66,5 +58,5 @@ if __name__ == "__main__":
     entries_data = sorted(get_entries(url_list), key=attrgetter('published'), reverse=True)
     for output_articles in entries_data[:15]:
         all_news += f'<li>{output_articles.title}<br/><small><a href="{output_articles.url}" target="new">{output_articles.domain}</a> | Published {output_articles.published}</small></li>\n'
-    final_output = replace_chunk(index_contents, "content_marker", f"<ul>\n{all_news}</ul>")
+    final_output = helper.replace_chunk(index_contents, "content_marker", f"<ul>\n{all_news}</ul>")
     index_page.open("w").write(final_output)

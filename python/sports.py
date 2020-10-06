@@ -1,36 +1,18 @@
 
  # importing modules
 import os
-import re
+import helper
 import pathlib
 import requests
 import json
 from datetime import date
 
-# Methods
-def ord(n):
-    return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
-
-def dtStylish(dt,f):
-    return dt.strftime(f).replace("{th}", ord(dt.day))
-
-def pprint(string):
-    json_formatted_str = json.dumps(string, indent=2)
-    print(json_formatted_str)
-
-def replace_chunk(content, marker, chunk):
-    replacer = re.compile(
-        r"<!\-\- {} starts \-\->.*<!\-\- {} ends \-\->".format(marker, marker),
-        re.DOTALL,
-    )
-    chunk = "<!-- {} starts -->\n{}\n<!-- {} ends -->".format(marker, chunk, marker)
-    return replacer.sub(chunk, content)
 
 # setup
 fixtures = set()
 pre_content = ""
 date = date.today()
-today_date_string = dtStylish(date.today(), '%A-{th}-%B')
+today_date_string = helper.dtStylish(date.today(), '%A-{th}-%B')
 root = pathlib.Path(__file__).parent.parent.resolve()
 url = f"https://push.api.bbci.co.uk/b?t=%2Fdata%2Fbbc-morph-football-scores-match-list-data%2FendDate%2F{date}%2FstartDate%2F{date}%2FtodayDate%2F{date}%2Ftournament%2Ffull-priority-order%2Fversion%2F2.4.1?timeout=5"
 response_dict = json.loads(requests.get(url).text)
@@ -59,5 +41,5 @@ if __name__ == "__main__":
     all_news = "<h2>Fixtures</h2>\n"
     index_page = root / "index.html"
     index_contents = index_page.open().read()
-    final_output = replace_chunk(index_contents, "fixtures_marker", f"<ul>\n{pre_content}</ul>")
+    final_output = helper.replace_chunk(index_contents, "fixtures_marker", f"<ul>\n{pre_content}</ul>")
     index_page.open("w").write(final_output)
