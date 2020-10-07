@@ -36,13 +36,14 @@ jobs:
         git config --global user.name "generator-bot"
         git diff --quiet || (git add -A && git commit -m "Updated json file")
         git push
-    - name: Add message to issue
-    - uses: actions/first-interaction@v1
+    - name: Comment on issue
+      uses: ActionsDesk/add-comment-action@master
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: 'Thanks, this has now been added'
-    - name: Add message to issue
+        message: 'Thanks, this has now been added!'
+      env:
+        GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+    - name: Close issue
     - uses: peter-evans/close-issue@v1
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        close: true
+        issue-number: ${{ github.event.issue.number }}
+        comment: Auto-closing issue
