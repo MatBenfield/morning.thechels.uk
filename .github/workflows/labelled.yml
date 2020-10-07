@@ -4,7 +4,7 @@ on:
     types: [labeled]
 jobs:
   build:
-    if: ${{ github.event.label.name }} in ('stocks','quotes','websites')
+    if: ${{ github.event.label.name }} in ('stocks','quotes','websites') && ${{ github.issue.author }} == $ {{ github.repo.owner}}
     runs-on: ubuntu-latest
     steps:
     - name: Check out repo
@@ -36,6 +36,7 @@ jobs:
         git config --global user.name "generator-bot"
         git diff --quiet || (git add -A && git commit -m "Updated json file")
         git push
+    ## This does not work yet
     - name: Comment on issue
       uses: ActionsDesk/add-comment-action@master
       with:
