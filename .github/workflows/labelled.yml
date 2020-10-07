@@ -4,7 +4,7 @@ on:
     types: [labeled]
 jobs:
   build:
-    if: ${{ github.event.label.name }} == ''
+    if: ${{ github.event.label.name }} in ('stocks','quotes','websites')
     runs-on: ubuntu-latest
     steps:
     - name: Check out repo
@@ -34,5 +34,5 @@ jobs:
         git diff
         git config --global user.email "ngenerator-bot@example.com"
         git config --global user.name "generator-bot"
-        git diff --quiet || (git add {label}.json && git commit -m "Updated json file")
+        git diff --quiet || (git add -A && git commit -m "Updated json file")
         git push
