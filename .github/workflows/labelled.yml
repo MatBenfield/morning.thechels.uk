@@ -43,7 +43,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
     - name: Close issue
-    - uses: peter-evans/close-issue@v1
+      uses: peter-evans/close-issue@v1
       with:
         issue-number: ${{ github.event.issue.number }}
         comment: Auto-closing issue
