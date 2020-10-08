@@ -15,7 +15,10 @@ jobs:
     - name: check permission
       id: permission_check
       if: github.actor == github.event.repository.owner.login
-      run: echo permission pass
+      run: |
+        echo permission pass
+        echo github.event.repository.owner.login
+        echo github.actor
     - name: check permission failed
       if: github.actor != github.event.repository.owner.login
       run: exit 1
@@ -67,7 +70,7 @@ jobs:
         git config --global user.name "generator-bot"
         git diff --quiet || (git add -A && git commit -m "Updated json file")
         git push
-    - name: Update and close issue
+    - name: Update issue
       uses: actions/github-script@0.5.0
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
@@ -78,14 +81,15 @@ jobs:
             repo: context.repo.repo,
             body: '👋 @' + context.actor + ', approval granted, updating file ...'
           })
-            github.issues.removeLabel({
+          github.issues.removeLabel({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
             name: '${{ github.event.label.name }}',
           })
-            github.issues.closeIssue({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo',
-          })
+    - name: Close issue
+      uses: peter-evans/close-issue@v1
+      with:
+          issue-number: context.issue.number
+          comment: |
+            Auto-closing this issue.
