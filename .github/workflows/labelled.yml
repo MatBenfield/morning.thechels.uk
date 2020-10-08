@@ -76,12 +76,6 @@ jobs:
         git config --global user.name "generator-bot"
         git diff --quiet || (git add -A && git commit -m "Updated json file")
         git push
-    - name: Close Issue
-      uses: peter-evans/close-issue@v1
-      with:
-        issue-number: ${{ github.event.issue.number }},
-        comment: "Auto-closing this issue."
-        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Update issue
       uses: actions/github-script@0.5.0
       with:
@@ -93,12 +87,17 @@ jobs:
             repo: context.repo.repo,
             body: '👋 @' + context.actor + ', approval granted, updating file ...'
           })
-          github.issues.removeLabel({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            name: '${{ github.event.label.name }}',
-          })
+          # github.issues.removeLabel({
+          #   issue_number: context.issue.number,
+          #   owner: context.repo.owner,
+          #   repo: context.repo.repo,
+          #   name: '${{ github.event.label.name }}',
+          # })
+    - name: close issue
+      uses: bdougie/close-issues-based-on-label@v1.3
+      env:
+        LABEL: ${{ github.event.label.name }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   always_job:
     name: Always run job
