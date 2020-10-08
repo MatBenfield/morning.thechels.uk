@@ -6,6 +6,7 @@ on:
 env:
   content: ${{ github.event.issue.body }}
   label: ${{ github.event.label.name }}
+  issue_number : $ {{ github.event.issue.number }}
 
 jobs:
   permission:
@@ -92,5 +93,5 @@ jobs:
     - name: Close issue
       uses: peter-evans/close-issue@v1
       with:
-          issue-number: ${{ context.issue.number }},
+          issue-number: ${{ issue_number }},
           comment: Auto-closing this issue.
