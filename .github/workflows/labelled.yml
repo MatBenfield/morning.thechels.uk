@@ -87,17 +87,13 @@ jobs:
             repo: context.repo.repo,
             body: '👋 @' + context.actor + ', approval granted, updating file ...'
           })
-          # github.issues.removeLabel({
-          #   issue_number: context.issue.number,
-          #   owner: context.repo.owner,
-          #   repo: context.repo.repo,
-          #   name: '${{ github.event.label.name }}',
-          # })
-    - name: close issue
-      uses: bdougie/close-issues-based-on-label@v1.2
-      env:
-        LABEL: ${{ github.event.label.name }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github.issues.removeLabel({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            name: '${{ github.event.label.name }}',
+            state: closed
+          })
 
   always_job:
     name: Always run job
