@@ -25,18 +25,17 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          let env_label = ${{ github.event.label.name }}
           github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: ':x: Attempt triggered by @' + context.actor + ' who is not the repository owner. `${{ env_label }}` stopped.'
+            body: ':x: Attempt triggered by @' + context.actor + ' who is not the repository owner. `${{ github.event.label.name }}` stopped.'
           })
           github.issues.removeLabel({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            name: '${{ env_label }}',
+            name: '${{ github.event.label.name }}',
           })
   build:
     if: ${{ github.event.label.name }} in ('stocks','quotes','websites') && steps.permission_check.outcome == 'success'
