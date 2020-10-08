@@ -92,5 +92,5 @@ jobs:
     - name: Close issue
       uses: peter-evans/close-issue@v1
       with:
-          issue-number: context.issue.number
+          issue-number: ${{ context.issue.number }},
           comment: Auto-closing this issue.
