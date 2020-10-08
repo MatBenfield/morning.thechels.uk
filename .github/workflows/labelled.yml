@@ -60,12 +60,15 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
+
     - name: Install Python dependencies
       run: |
         python -m pip install -r requirements.txt
+
     - name: Check for new content
       run: |-
         python 'python/updater.py'
+
     - name: Commit and push changes
       run: |-
         git diff
@@ -73,6 +76,7 @@ jobs:
         git config --global user.name "generator-bot"
         git diff --quiet || (git add -A && git commit -m "Updated json file")
         git push
+
     - name: Update issue
       uses: actions/github-script@0.5.0
       with:
@@ -90,8 +94,9 @@ jobs:
             repo: context.repo.repo,
             name: '${{ github.event.label.name }}',
           })
+
     - name: Close issue
       uses: peter-evans/close-issue@v1
       with:
           issue-number: ${{ github.event.issue.number }},
-          comment: Auto-closing this issue.
+          comment: 'Auto-closing this issue.'
