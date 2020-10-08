@@ -94,7 +94,7 @@ jobs:
           #   name: '${{ github.event.label.name }}',
           # })
     - name: close issue
-      uses: bdougie/close-issues-based-on-label@v1.3
+      uses: bdougie/close-issues-based-on-label@v1.2
       env:
         LABEL: ${{ github.event.label.name }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
