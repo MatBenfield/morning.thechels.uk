@@ -92,7 +92,6 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo,
             name: '${{ github.event.label.name }}',
-            state: closed
           })
 
   always_job:
