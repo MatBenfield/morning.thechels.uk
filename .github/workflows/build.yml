@@ -1,7 +1,6 @@
 name: Daily Build
 # build and tweet
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron:  '0 5 * * *'

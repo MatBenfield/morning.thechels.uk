@@ -99,5 +99,4 @@ jobs:
       uses: peter-evans/close-issue@v1
       with:
           issue-number: context.issue.number
-          comment: |
-            Auto-closing this issue.
+          comment: Auto-closing this issue.
