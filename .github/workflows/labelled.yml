@@ -29,7 +29,7 @@ jobs:
         echo ${{ steps.permission_failure.outcome }}
         echo end debug
     - name: Comment Permission Check Fail and Remove Label
-      if: steps.permission_failure.outcome == 'success' && ${{ github.event.label.name }} in ('stocks','quotes','websites')
+      if: steps.permission_check.outcome != 'success' && ${{ github.event.label.name }} in ('stocks','quotes','websites')
       uses: actions/github-script@0.5.0
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
