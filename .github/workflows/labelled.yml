@@ -94,17 +94,20 @@ jobs:
             repo: context.repo.repo,
             name: '${{ github.event.label.name }}',
           })
-
-    - name: Close issue
-      uses: peter-evans/close-issue@v1
-      with:
-          issue-number: ${{ github.event.issue.number }},
-          comment: "Auto-closing this issue."
-          token: ${{ secrets.GITHUB_TOKEN }}
+  close_issue:
+    name: close issue-number
+    runs-on: ubuntu-latest
+    steps:
+      - name: closing time
+        uses: peter-evans/close-issue@v1
+        with:
+            issue-number: ${{ github.event.issue.number }},
+            comment: "Auto-closing this issue."
+            token: ${{ secrets.GITHUB_TOKEN }}
 
   always_job:
     name: Always run job
     runs-on: ubuntu-latest
     steps:
       - name: Always run
-        run: echo "This job is used to prevent the workflow status from showing as failed when all other jobs are skipped.
+        run: echo "This job is used to prevent the workflow status from showing as failed when all other jobs are skipped."
