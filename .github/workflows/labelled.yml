@@ -20,9 +20,6 @@ jobs:
     - name: check permission failed
       id: permission_failure
       if: github.actor != github.event.repository.owner.login
-      run: exit 1
-    - name: debug
-      id: permission_debug
       run: |
         echo permission failure actions
         - name: Comment Permission Check Fail and Remove Label
