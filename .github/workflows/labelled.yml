@@ -17,13 +17,13 @@ jobs:
       if: github.actor == github.event.repository.owner.login
       run: |
         echo permission pass
-        echo github.event.repository.owner.login
-        echo github.actor
+        echo ${{ github.event.repository.owner.login }}
+        echo ${{ github.actor }}
     - name: check permission failed
       if: github.actor != github.event.repository.owner.login
       run: exit 1
     - name: Comment Permission Check Fail and Remove Label
-      if: (failure()) && ${{ github.event.label.name }} in ('stocks','quotes','websites')
+      if: steps.permission_check.outcome == 'failure' && ${{ github.event.label.name }} in ('stocks','quotes','websites')
       uses: actions/github-script@0.5.0
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
@@ -41,7 +41,7 @@ jobs:
             name: '${{ github.event.label.name }}',
           })
   build:
-    if: ${{ github.event.label.name }} in ('stocks','quotes','websites') && steps.permission_check.outcome == 'success'
+    if: steps.permission_check.outcome == 'success' && ${{ github.event.label.name }} in ('stocks','quotes','websites')
     runs-on: ubuntu-latest
     steps:
     - name: Check out repo
