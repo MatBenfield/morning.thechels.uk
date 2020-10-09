@@ -93,6 +93,12 @@ jobs:
             repo: context.repo.repo,
             name: '${{ github.event.label.name }}',
           })
+    - name: Close issue
+      uses: peter-evans/close-issue@v1
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        comment: "Auto-closing this issue."
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   always_job:
     name: Always run job
