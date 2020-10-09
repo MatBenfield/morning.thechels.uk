@@ -2,6 +2,7 @@ name: 'Update json'
 on:
   issues:
     types: [labeled]
+  workflow_dispatch:
 
 env:
   content: ${{ github.event.issue.body }}
