@@ -22,25 +22,28 @@ jobs:
       id: permission_failure
       if: github.actor != github.event.repository.owner.login
       run: |
-        echo permission failure actions
-        - name: Comment Permission Check Fail and Remove Label
-          if: steps.permission_check.outcome != 'success' && ${{ github.event.label.name }} in ('stocks','quotes','websites')
-          uses: actions/github-script@0.5.0
-          with:
-            github-token: ${{secrets.GITHUB_TOKEN}}
-            script: |
-              github.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: ':x: Attempt triggered by @' + context.actor + ' who is not the repository owner. `${{ github.event.label.name }}` stopped.'
-              })
-              github.issues.removeLabel({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: '${{ github.event.label.name }}',
-              })
+        echo permission failure
+    - name: permission failure actions
+      run: |
+        echo steps.permission_check.outcome
+        echo steps.permission_failure.outcome
+      if: steps.permission_failure.outcome != 'success' && ${{ github.event.label.name }} in ('stocks','quotes','websites')
+      uses: actions/github-script@0.5.0
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: ':x: Attempt triggered by @' + context.actor + ' who is not the repository owner. `${{ github.event.label.name }}` stopped.'
+          })
+          github.issues.removeLabel({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            name: '${{ github.event.label.name }}',
+          })
 
   build:
     runs-on: ubuntu-latest
