@@ -18,15 +18,14 @@ jobs:
       if: github.actor == github.event.repository.owner.login
       run: |
         echo permission pass
+        echo steps.permission_check.outcome
     - name: check permission failed
       id: permission_failure
       if: github.actor != github.event.repository.owner.login
       run: |
         echo permission failure
-    - name: permission failure actions
-      run: |
-        echo steps.permission_check.outcome
         echo steps.permission_failure.outcome
+    - name: permission failure actions
       if: steps.permission_failure.outcome != 'success' && ${{ github.event.label.name }} in ('stocks','quotes','websites')
       uses: actions/github-script@0.5.0
       with:
