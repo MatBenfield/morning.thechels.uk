@@ -1,3 +1,4 @@
+name: Label Build
 on:
   issues:
     types: [labeled]
