@@ -45,7 +45,7 @@ def get_covid_data(num_days):
 if __name__ == "__main__":
     index_page = root / "index.html"
     index_contents = index_page.open().read()
-    string_output = get_covid_data(5)
+    string_output = get_covid_data(10)
 
     final_output = replace_chunk(index_contents, "covid_marker", f"<ul>\n{string_output}</ul>")
     index_page.open("w").write(final_output)

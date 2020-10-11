@@ -130,4 +130,5 @@ dmypy.json
 
 .vscode
 python/test.py
-
+python/full-corona.py
+coronavirus.html
