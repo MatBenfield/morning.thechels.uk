@@ -9,6 +9,7 @@
     "http://blog.mailgun.net/rss",
     "http://blog.strava.com/feed/atom/",
     "http://status.strava.com/history.rss",
+    "https://starlingbank.statuspage.io/feed"
     "https://blog.dropbox.com/feed/",
     "https://medium.com/feed/strava-engineering",
     "http://www.politics.co.uk/rss.xml",
@@ -30,6 +31,5 @@
     "http://www.macsparky.com/blog/rss.xml",
     "https://github.blog/feed/",
     "https://www.edwardthomson.com/blog/feed/",
-    "https://clcstriders-runningclub.co.uk/feed.xml",
-    "https://www.starlingbank.com/blog/rss.xml"
+    "https://clcstriders-runningclub.co.uk/feed.xml"
 ]
