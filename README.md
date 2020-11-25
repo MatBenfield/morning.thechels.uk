@@ -6,7 +6,7 @@ Morning, is a home page built daily at 5:00 UTC using github-actions, utilising 
 
 ## Prerequisites
 
-In order for this solution to work you need to enter some secrets
+In order for this solution to work you need to enter some secrets for the repo (or hard-code the values in the scripts if you don't care). There are also a bunch of config files (json) that need updating to suit your needs.
 
 1. An open weather API key - you can register for a free account on their website.
 2. Latitude and Longitude for the weather API.
