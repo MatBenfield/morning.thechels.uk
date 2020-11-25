@@ -19,5 +19,5 @@ if __name__ == "__main__":
     all_news = ""
     index_page = root / "index.html"
     index_contents = index_page.open().read()
-    final_output = helper.replace_chunk(index_contents, "word_marker", f"<blockquote>\n{output_word}\n</blockquote>\n")
+    final_output = helper.replace_chunk(index_contents, "word_marker", f"<blockquote>{output_word}\n</blockquote>\n")
     index_page.open("w").write(final_output)
