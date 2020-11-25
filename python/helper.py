@@ -10,6 +10,11 @@ def replace_chunk(content, marker, chunk):
     chunk = "<!-- {} starts -->\n{}\n<!-- {} ends -->".format(marker, chunk, marker)
     return replacer.sub(chunk, content)
 
+
+def remove_img_tags(data):
+    p = re.compile(r'<img.*?/>')
+    return p.sub('', data)
+
 # Methods
 def ord(n):
     return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
