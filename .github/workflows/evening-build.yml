@@ -1,0 +1,49 @@
+name: Evening Build
+# build and tweet
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 21 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - uses: actions/cache@v2
+      name: Configure pip caching
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Python dependencies
+      run: |
+        python -m pip install -r requirements.txt
+    - name: Processing
+      env:
+          open_weather_key: ${{ secrets.OPEN_WEATHER_KEY }}
+          city_code: ${{ secrets.CITY_CODE }}
+          lat: ${{ secrets.LAT_COORDS }}
+          lon: ${{ secrets.LON_COORDS }}
+      run: |-
+        python 'python/news.py'
+        python 'python/weather.py'
+        python 'python/sports.py'
+        python 'python/stocks.py'
+        python 'python/quotes.py'
+        python 'python/wordthink.py'
+        python 'python/coronavirus.py'
+        cat index.html
+    - name: Commit and push if Index page changed
+      run: |-
+        git diff
+        git config --global user.email "index-updater-bot@example.com"
+        git config --global user.name "index-updater-bot"
+        git diff --quiet || (git add index.html && git commit -m "Updated index.html")
+        git push
