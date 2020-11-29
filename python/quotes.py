@@ -10,7 +10,7 @@ import json
 root = pathlib.Path(__file__).parent.parent.resolve()
 with open( root / "config/quotes.json", 'r') as filehandle:
   random_quote = random.choice(json.load(filehandle))
-  random_quote = random_qutoe.replace("-","<br/> -")
+  random_quote = random_quote.replace("-","<br/> -")
 
 # processing
 if __name__ == "__main__":
