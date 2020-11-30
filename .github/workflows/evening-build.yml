@@ -39,7 +39,6 @@ jobs:
         python 'python/quotes.py'
         python 'python/wordthink.py'
         python 'python/coronavirus.py'
-        cat index.html
     - name: Commit and push if Index page changed
       run: |-
         git diff
