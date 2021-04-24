@@ -14,12 +14,13 @@ pre_content = ""
 date = date.today()
 today_date_string = helper.dtStylish(date.today(), '%A-{th}-%B')
 root = pathlib.Path(__file__).parent.parent.resolve()
-url = f"https://push.api.bbci.co.uk/b?t=%2Fdata%2Fbbc-morph-football-scores-match-list-data%2FendDate%2F{date}%2FstartDate%2F{date}%2FtodayDate%2F{date}%2Ftournament%2Ffull-priority-order%2Fversion%2F2.4.1?timeout=5"
+url = f"https://push.api.bbci.co.uk/data/bbc-morph-football-scores-match-list-data/endDate/{date}/startDate/{date}/todayDate/{date}/tournament/full-priority-order/version/2.4.6?timeout=5"
 response_dict = json.loads(requests.get(url).text)
+print(url)
 with open( root / "config/tournaments.json", 'r') as filehandle:
   tournament_slug = json.load(filehandle)
 
-for md_events in list(response_dict['payload'][0]['body']['matchData']):
+for md_events in list(response_dict['matchData']):
     for tournaments in (t_item for t_item in md_events if md_events['tournamentMeta']['tournamentSlug'] in tournament_slug):
         for events in md_events['tournamentDatesWithEvents'][today_date_string]:
             for games in events['events']:

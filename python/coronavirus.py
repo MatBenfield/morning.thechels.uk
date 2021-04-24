@@ -7,7 +7,6 @@ import os
 
 root = pathlib.Path(__file__).parent.parent.resolve()
 city = os.getenv('city_code')
-
 # Methods
 def replace_chunk(content, marker, chunk):
     replacer = re.compile(
@@ -24,6 +23,7 @@ def get_covid_data(num_days):
         'structure={"date":"date","newCases":"newCasesByPublishDate","deaths":"newDeathsByDeathDate"}'
     )
     response = get(endpoint, timeout=10)
+    print(response)
     if response.status_code >= 400:
         raise RuntimeError(f'Request failed: { response.text }')
     string_builder = ""
